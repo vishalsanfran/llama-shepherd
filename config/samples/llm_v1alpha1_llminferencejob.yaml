@@ -1,0 +1,10 @@
+apiVersion: llm.example.com/v1alpha1
+kind: LLMInferenceJob
+metadata:
+  labels:
+    app.kubernetes.io/name: llama-shepherd
+    app.kubernetes.io/managed-by: kustomize
+  name: llminferencejob-sample
+  namespace: default
+spec:
+  prompt: "Hello from operator!"
