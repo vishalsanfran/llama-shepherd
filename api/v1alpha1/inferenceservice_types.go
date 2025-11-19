@@ -10,7 +10,7 @@ type InferenceServiceSpec struct {
 	// logical name of the model service routes to
 	ModelRef string `json:"modelRef"`
 
-	//number of router pods
+	// number of router pods
 	// +kubebuilder:default=1
 	Replicas *int32 `json:"replicas,omitempty"`
 
@@ -22,7 +22,7 @@ type InferenceServiceSpec struct {
 
 // InferenceServiceStatus defines the observed state of InferenceService.
 type InferenceServiceStatus struct {
-	//how many router pods are actually ready.
+	// how many router pods are actually ready.
 	AvailableReplicas int32 `json:"availableReplicas,omitempty"`
 }
 
