@@ -1,0 +1,74 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: inferenceservices.llm.example.com
+spec:
+  group: llm.example.com
+  names:
+    kind: InferenceService
+    listKind: InferenceServiceList
+    plural: inferenceservices
+    singular: inferenceservice
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: InferenceService is the Schema for the inferenceservices API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of InferenceService
+            properties:
+              maxConcurrency:
+                default: 4
+                description: |-
+                  maximum number of concurrent requests the router
+                  should accept per pod
+                format: int32
+                type: integer
+              modelRef:
+                description: logical name of the model service routes to
+                type: string
+              replicas:
+                default: 1
+                description: number of router pods
+                format: int32
+                type: integer
+            required:
+            - modelRef
+            type: object
+          status:
+            description: status defines the observed state of InferenceService
+            properties:
+              availableReplicas:
+                description: how many router pods are actually ready.
+                format: int32
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

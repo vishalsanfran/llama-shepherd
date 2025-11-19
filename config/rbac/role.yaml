@@ -5,8 +5,33 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - llm.example.com
   resources:
+  - inferenceservices
   - llminferencejobs
   verbs:
   - create
@@ -19,12 +44,14 @@ rules:
 - apiGroups:
   - llm.example.com
   resources:
+  - inferenceservices/finalizers
   - llminferencejobs/finalizers
   verbs:
   - update
 - apiGroups:
   - llm.example.com
   resources:
+  - inferenceservices/status
   - llminferencejobs/status
   verbs:
   - get

@@ -68,7 +68,10 @@ func (r *LLMInferenceJobReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if k8sJob.Status.Succeeded > 0 {
 			cr.Status.Completed = true
 			cr.Status.Output = "finished (dummy output)"
-			r.Status().Update(ctx, &cr)
+			if err := r.Status().Update(ctx, &cr); err != nil {
+				log.Error(err, "failed to update status")
+				return ctrl.Result{}, err
+			}
 		}
 	}
 

@@ -3,6 +3,7 @@
 # It should be run by config/default
 resources:
 - bases/llm.example.com_llminferencejobs.yaml
+- bases/llm.example.com_inferenceservices.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:
