@@ -1,0 +1,9 @@
+apiVersion: llm.example.com/v1alpha1
+kind: InferenceService
+metadata:
+  name: chat-endpoint
+  namespace: default
+spec:
+  modelRef: "dummy-model"
+  replicas: 1
+  maxConcurrency: 4
