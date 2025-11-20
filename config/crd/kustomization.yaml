@@ -4,6 +4,7 @@
 resources:
 - bases/llm.example.com_llminferencejobs.yaml
 - bases/llm.example.com_inferenceservices.yaml
+- bases/llm.example.com_kvcachepools.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:
