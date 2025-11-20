@@ -7,3 +7,4 @@ spec:
   modelRef: "dummy-model"
   replicas: 1
   maxConcurrency: 4
+  cachePoolRef: "default-kv-pool"

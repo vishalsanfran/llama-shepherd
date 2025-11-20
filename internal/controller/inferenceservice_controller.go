@@ -19,6 +19,8 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -61,6 +63,30 @@ func (r *InferenceServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 
 	deployName := isvc.Name + "-router"
 	svcName := isvc.Name
+
+	var kvpool llmv1alpha1.KVCachePool
+	if isvc.Spec.CachePoolRef != "" {
+		if err := r.Get(ctx, client.ObjectKey{
+			Name:      isvc.Spec.CachePoolRef,
+			Namespace: isvc.Namespace,
+		}, &kvpool); err != nil {
+			log.Error(err, "failed to find referenced KVCachePool")
+			// Do NOT return error — instead, requeue later
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
+		}
+	}
+
+	cacheEndpoints := []string{}
+	if isvc.Spec.CachePoolRef != "" {
+		// routers will talk to pods directly (headless service)
+		headlessSvcName := kvpool.Name + "-cache"
+		cacheEndpoints = append(cacheEndpoints,
+			fmt.Sprintf("%s.%s.svc.cluster.local:6379",
+				headlessSvcName,
+				kvpool.Namespace,
+			),
+		)
+	}
 
 	var deploy appsv1.Deployment
 	err := r.Get(ctx, client.ObjectKey{Name: deployName, Namespace: isvc.Namespace}, &deploy)
@@ -111,6 +137,10 @@ func (r *InferenceServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 									{
 										Name:  "MAX_CONCURRENCY",
 										Value: func() string { return fmt.Sprintf("%d", isvc.Spec.MaxConcurrency) }(),
+									},
+									{
+										Name:  "KV_ENDPOINTS",
+										Value: strings.Join(cacheEndpoints, ","),
 									},
 								},
 							},

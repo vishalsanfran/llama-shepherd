@@ -1,0 +1,9 @@
+apiVersion: llm.example.com/v1alpha1
+kind: KVCachePool
+metadata:
+  name: default-kv-pool
+  namespace: default
+spec:
+  totalMemoryGB: 4
+  replicas: 2
+  strategy: "lru"
