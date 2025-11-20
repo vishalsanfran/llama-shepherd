@@ -18,6 +18,9 @@ type InferenceServiceSpec struct {
 	// should accept per pod
 	// +kubebuilder:default=4
 	MaxConcurrency int32 `json:"maxConcurrency,omitempty"`
+
+	// CachePoolRef points to a KVCachePool the router should use.
+	CachePoolRef string `json:"cachePoolRef,omitempty"`
 }
 
 // InferenceServiceStatus defines the observed state of InferenceService.

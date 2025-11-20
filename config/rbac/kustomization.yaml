@@ -22,6 +22,9 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the llama-shepherd itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- kvcachepool_admin_role.yaml
+- kvcachepool_editor_role.yaml
+- kvcachepool_viewer_role.yaml
 - inferenceservice_admin_role.yaml
 - inferenceservice_editor_role.yaml
 - inferenceservice_viewer_role.yaml

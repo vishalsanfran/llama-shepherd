@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: inferenceservices.llm.example.com
+  name: kvcachepools.llm.example.com
 spec:
   group: llm.example.com
   names:
-    kind: InferenceService
-    listKind: InferenceServiceList
-    plural: inferenceservices
-    singular: inferenceservice
+    kind: KVCachePool
+    listKind: KVCachePoolList
+    plural: kvcachepools
+    singular: kvcachepool
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: InferenceService is the Schema for the inferenceservices API
+        description: KVCachePool is the Schema for the kvcachepools API
         properties:
           apiVersion:
             description: |-
@@ -37,35 +37,34 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of InferenceService
+            description: spec defines the desired state of KVCachePool
             properties:
-              cachePoolRef:
-                description: CachePoolRef points to a KVCachePool the router should
-                  use.
-                type: string
-              maxConcurrency:
-                default: 4
-                description: |-
-                  maximum number of concurrent requests the router
-                  should accept per pod
-                format: int32
-                type: integer
-              modelRef:
-                description: logical name of the model service routes to
-                type: string
               replicas:
                 default: 1
-                description: number of router pods
+                description: |-
+                  Replicas is the desired number of cache nodes.
+                  If omitted, defaults to 1.
+                format: int32
+                type: integer
+              strategy:
+                default: lru
+                description: |-
+                  Strategy is the cache strategy, e.g. "lru", "lfu", "rr".
+                  Right now it's just metadata; later it will drive eviction/placement.
+                type: string
+              totalMemoryGB:
+                description: TotalMemoryGB is the total memory (across all replicas)
+                  intended for KV cache.
                 format: int32
                 type: integer
             required:
-            - modelRef
+            - totalMemoryGB
             type: object
           status:
-            description: status defines the observed state of InferenceService
+            description: status defines the observed state of KVCachePool
             properties:
-              availableReplicas:
-                description: how many router pods are actually ready.
+              readyReplicas:
+                description: ReadyReplicas is how many cache nodes are currently ready.
                 format: int32
                 type: integer
             type: object
