@@ -1,3 +1,12 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kubebuilder-v3-blue?logo=kubernetes&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-green.svg" />
+ <img src="https://github.com/vishalsanfran/llama-shepherd/actions/workflows/test.yml/badge.svg" />
+</p>
+
+![Build](https://github.com/vishalsanfran/llama-shepherd/actions/workflows/build.yml/badge.svg)
+
 ## 🦙 llama-shepherd
 
 llama-shepherd is a modular Kubernetes Operator (written in Go using Kubebuilder) for exploring LLM runtime control planes, including:
