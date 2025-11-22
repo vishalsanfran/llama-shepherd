@@ -1,3 +1,12 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kubebuilder-v3-blue?logo=kubernetes&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-green.svg" />
+ <img src="https://github.com/vishalsanfran/llama-shepherd/actions/workflows/test.yml/badge.svg" />
+</p>
+
+![Build](https://github.com/vishalsanfran/llama-shepherd/actions/workflows/build.yml/badge.svg)
+
 ## 🦙 llama-shepherd
 
 llama-shepherd is a modular Kubernetes Operator (written in Go using Kubebuilder) for exploring LLM runtime control planes, including:
@@ -33,16 +42,24 @@ make install
 ### Run the Operator Locally
 `make run`
 
- Try an Example (LLMInferenceJob)
+Apply a sample resource:
 
 ```
-kubectl apply -f config/samples/llm_v1alpha1_llminferencejob.yaml
-kubectl get jobs
-kubectl logs job/<your-job-name>
+kubectl apply -f config/samples/llm_v1alpha1_inferenceservice.yaml
 ```
 
 Additional examples for InferenceService and KVCachePool are provided in
 config/samples/.
+
+### Try the Router
+Forward the router service:
+```
+kubectl port-forward svc/chat-endpoint 8080:80
+curl localhost:8080/healthz
+curl -X POST localhost:8080/infer \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"hello"}'
+```
 
 📤 Deploy to a Cluster
 
@@ -56,4 +73,18 @@ Cleanup:
 ```
 make undeploy
 make uninstall
+```
+
+###  Development Images
+
+Router image is built from cmd/router/:
+```
+docker build -f Dockerfile.router \
+  -t ghcr.io/<user>/llama-shepherd-router:latest .
+docker push ghcr.io/<user>/llama-shepherd-router:latest
+```
+
+Then restart router pods:
+```
+kubectl delete pod -l app=chat-endpoint-router 
 ```

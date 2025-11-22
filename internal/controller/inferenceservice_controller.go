@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -119,7 +120,7 @@ func (r *InferenceServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 								Name: "router",
 								// For now, use a simple HTTP echo server.
 								// Later, replace with a real Go router image.
-								Image: "hashicorp/http-echo",
+								Image: "ghcr.io/vishalsanfran/llama-shepherd-router:latest",
 								Args: []string{
 									"-text=llama-shepherd router: " + isvc.Spec.ModelRef,
 								},
@@ -136,7 +137,7 @@ func (r *InferenceServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 									},
 									{
 										Name:  "MAX_CONCURRENCY",
-										Value: func() string { return fmt.Sprintf("%d", isvc.Spec.MaxConcurrency) }(),
+										Value: strconv.Itoa(int(isvc.Spec.MaxConcurrency)),
 									},
 									{
 										Name:  "KV_ENDPOINTS",
@@ -191,11 +192,9 @@ func (r *InferenceServiceReconciler) Reconcile(ctx context.Context, req ctrl.Req
 				},
 				Ports: []corev1.ServicePort{
 					{
-						Name: "http",
-						Port: 80,
-						TargetPort: intstr.IntOrString{
-							IntVal: 5678,
-						},
+						Name:       "http",
+						Port:       80,
+						TargetPort: intstr.FromInt(5678),
 					},
 				},
 			},
